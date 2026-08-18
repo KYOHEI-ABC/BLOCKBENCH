@@ -153,11 +153,15 @@ console.assert(c(2).to[0] - 1 == c(5).from[0]);
 console.assert(c(2).to[1] - 1 == c(5).to[1]);
 
 console.assert(c(5).from[1] == c(6).to[1]);
+console.assert(c(5).from[0] - 0.5 == c(6).from[0]);
+console.assert(c(5).to[0] + 0.5 == c(6).to[0]);
 
 console.assert(c(2).from[0] + 1 == c(7).to[0]);
 console.assert(c(2).to[1] - 1 == c(7).to[1]);
 
 console.assert(c(7).from[1] == c(8).to[1]);
+console.assert(c(7).from[0] - 0.5 == c(8).from[0]);
+console.assert(c(7).to[0] + 0.5 == c(8).to[0]);
 
 
 
