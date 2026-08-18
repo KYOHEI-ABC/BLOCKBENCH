@@ -169,6 +169,14 @@ console.assert(LeftLegGroup.origin[1] == LeftLeg.to[1]);
 console.assert(RightLegGroup.origin[1] == LeftLegGroup.origin[1]);
 
 
+const Model = new Group({ name: "Model" }).init();
+RightLegGroup.addTo(Model);
+LeftLegGroup.addTo(Model);
+BodyGroup.addTo(Model);
+HeadGroup.addTo(Model);
+RightArmGroup.addTo(Model);
+LeftArmGroup.addTo(Model);
+
 Cube.all.forEach(cube => {
 	console.assert(cube.origin[2] == 0);
 });
