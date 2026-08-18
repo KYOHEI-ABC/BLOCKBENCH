@@ -46,57 +46,46 @@ leftArm.rotation[2] = -15
 
 Canvas.updateAll();
 
+function verifyGroupubeProperties(index, expectedName, expectedOrigin, expectedLength) {
+	const group = Group.all[index];
 
-console.assert(Group.all[0].name == "RightLeg");
-console.assert(Group.all[0].origin[0] == 3);
-console.assert(Group.all[0].origin[1] == 9);
-console.assert(Group.all[0].children.length == 1);
-console.assert(Group.all[0].children[0].name == Group.all[0].name);
+	if (!group) {
+		console.error(`[Verify Error] Index ${index} に Group が存在しません。`);
+		return false;
+	}
 
-console.assert(Group.all[1].name == "LeftLeg");
-console.assert(Group.all[1].origin[0] == -3);
-console.assert(Group.all[1].origin[1] == 9);
-console.assert(Group.all[1].children.length == 1);
-console.assert(Group.all[1].children[0].name == Group.all[1].name);
+	const isNameMatched = group.name === expectedName;
+	const isOriginMatched = JSON.stringify(group.origin) === JSON.stringify(expectedOrigin);
+	const isLengthMatched = group.children.length === expectedLength;
+	const isChildNameMatched = group.name === group.children[0].name;
 
-console.assert(Group.all[2].name == "Body");
-console.assert(Group.all[2].origin[0] == 0);
-console.assert(Group.all[2].origin[1] == 18);
-console.assert(Group.all[2].children.length == 1);
-console.assert(Group.all[2].children[0].name == Group.all[2].name);
+	const isAllMatched = isNameMatched && isOriginMatched && isLengthMatched && isChildNameMatched;
 
-console.assert(Group.all[3].name == "Head");
-console.assert(Group.all[3].origin[0] == 0);
-console.assert(Group.all[3].origin[1] == 29);
-console.assert(Group.all[3].children.length == 2);
-console.assert(Group.all[3].children[0].name == Group.all[3].name);
+	if (!isAllMatched) {
+		console.warn(`[Verify Failed] Cube[${index}]`, {
+			expected: { name: expectedName, origin: expectedOrigin, length: expectedLength, childName: group.name },
+			actual: { name: group.name, origin: group.origin, length: group.children.length, childName: group.children[0].name }
+		});
+	}
+
+	return isAllMatched;
+}
+
+verifyGroupubeProperties(0, "RightLeg", [3, 9, 0], 1);
+verifyGroupubeProperties(1, "LeftLeg", [-3, 9, 0], 1);
+verifyGroupubeProperties(2, "Body", [0, 18, 0], 1);
+verifyGroupubeProperties(3, "Head", [0, 29, 0], 2);
 console.assert(Group.all[3].children[1].name == "Neck");
 
-console.assert(Group.all[4].name == "RightArm");
-console.assert(Group.all[4].origin[0] == 6 + 1.5 - 1);
-console.assert(Group.all[4].origin[1] == 24 - 1.5 - 1);
-console.assert(Group.all[4].children.length == 2);
-console.assert(Group.all[4].children[0].name == Group.all[4].name);
+verifyGroupubeProperties(4, "RightArm", [6 + 1.5 - 1, 24 - 1.5 - 1, 0], 2);
 console.assert(Group.all[4].children[1].name == "RightHand");
 
-console.assert(Group.all[5].name == "RightHand");
-console.assert(Group.all[5].origin[0] == Group.all[4].origin[0]);
-console.assert(Group.all[5].origin[1] == 12 + 2 - 1);
-console.assert(Group.all[5].children.length == 1);
-console.assert(Group.all[5].children[0].name == Group.all[5].name);
+verifyGroupubeProperties(5, "RightHand", [6 + 1.5 - 1, 12 + 2 - 1, 0], 1);
 
-console.assert(Group.all[6].name == "LeftArm");
-console.assert(Group.all[6].origin[0] == -6 - 1.5 + 1);
-console.assert(Group.all[6].origin[1] == 24 - 1.5 - 1);
-console.assert(Group.all[6].children.length == 2);
-console.assert(Group.all[6].children[0].name == Group.all[6].name);
+verifyGroupubeProperties(6, "LeftArm", [-6 - 1.5 + 1, 24 - 1.5 - 1, 0], 2);
 console.assert(Group.all[6].children[1].name == "LeftHand");
 
-console.assert(Group.all[7].name == "LeftHand");
-console.assert(Group.all[7].origin[0] == Group.all[6].origin[0]);
-console.assert(Group.all[7].origin[1] == 12 + 2 - 1);
-console.assert(Group.all[7].children.length == 1);
-console.assert(Group.all[7].children[0].name == Group.all[7].name);
+verifyGroupubeProperties(7, "LeftHand", [-6 - 1.5 + 1, 12 + 2 - 1, 0], 1);
 
 Group.all.forEach(group => {
 	console.assert(group.origin[2] == 0)
