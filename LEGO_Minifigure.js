@@ -17,25 +17,22 @@ function newGroup(name, from, size) {
 	return group;
 }
 
-function pivot(group) {
-	const cube = group.children[0];
-	group.origin[1] = cube.to[1] - (cube.to[0] - cube.from[0]) / 2;
-}
 
 const rightLeg = newGroup("RightLeg", [0, 0, -3], [6, 12, 6]);
-pivot(rightLeg);
+rightLeg.origin[1] = rightLeg.children[0].to[1]
 const leftLeg = newGroup("LeftLeg", [-6, 0, -3], [6, 12, 6]);
-pivot(leftLeg);
+leftLeg.origin[1] = leftLeg.children[0].to[1]
+
 
 newGroup("Body", [-6, 12, -3], [12, 12, 6]);
 newCube("Neck", [-2, 24, -2], [4, 10, 4]).addTo(newGroup("Head", [-4, 25, -4], [8, 8, 8]));
 
 const rightArm = newGroup("RightArm", [6 - 1, 16 - 1, -1.5], [3, 8, 3]);
-pivot(rightArm);
+rightArm.origin[1] = rightArm.children[0].to[1] - (rightArm.children[0].to[0] - rightArm.children[0].from[0]) / 2
 newGroup("RightHand", [rightArm.origin[0] - 2, rightArm.children[0].from[1] - 4, -2], [4, 4, 4]).addTo(rightArm);
 
 const leftArm = newGroup("LeftArm", [-9 + 1, 16 - 1, -1.5], [3, 8, 3]);
-pivot(leftArm);
+leftArm.origin[1] = leftArm.children[0].to[1] - (leftArm.children[0].to[0] - leftArm.children[0].from[0]) / 2
 newGroup("LeftHand", [leftArm.origin[0] - 2, leftArm.children[0].from[1] - 4, -2], [4, 4, 4]).addTo(leftArm);
 
 rightLeg.rotation[1] = -1.5
@@ -57,8 +54,8 @@ function verifyGroup(index, name, origin, length) {
 	return true;
 };
 
-verifyGroup(0, "RightLeg", [3, 9, 0], 1);
-verifyGroup(1, "LeftLeg", [-3, 9, 0], 1);
+verifyGroup(0, "RightLeg", [3, 12, 0], 1);
+verifyGroup(1, "LeftLeg", [-3, 12, 0], 1);
 verifyGroup(2, "Body", [0, 18, 0], 1);
 verifyGroup(3, "Head", [0, 29, 0], 2);
 console.assert(Group.all[3].children[1].name == "Neck");
@@ -163,11 +160,11 @@ console.assert(LeftArmGroup.origin[0] == LeftHandGroup.origin[0]);
 
 console.assert(RightLegGroup.origin[0] + 3 == RightLeg.to[0]);
 console.assert(RightLegGroup.origin[0] - 3 == RightLeg.from[0]);
-console.assert(RightLegGroup.origin[1] + 3 == RightLeg.to[1]);
+console.assert(RightLegGroup.origin[1] == RightLeg.to[1]);
 
 console.assert(LeftLegGroup.origin[0] + 3 == LeftLeg.to[0]);
 console.assert(LeftLegGroup.origin[0] - 3 == LeftLeg.from[0]);
-console.assert(LeftLegGroup.origin[1] + 3 == LeftLeg.to[1]);
+console.assert(LeftLegGroup.origin[1] == LeftLeg.to[1]);
 
 console.assert(RightLegGroup.origin[1] == LeftLegGroup.origin[1]);
 
