@@ -130,6 +130,10 @@ function verifyCubeProperties(index, expectedName, expectedSize, expectedOrigin)
 	return isAllMatched;
 }
 
+function c(i) {
+	return Cube.all[i];
+}
+
 verifyCubeProperties(0, "RightLeg", [6, 12, 6], [3, 6, 0]);
 verifyCubeProperties(1, "LeftLeg", [6, 12, 6], [-3, 6, 0]);
 verifyCubeProperties(2, "Body", [12, 12, 6], [0, 18, 0]);
@@ -139,6 +143,22 @@ verifyCubeProperties(5, "RightArm", [3, 8, 3], [6 + 1.5 - 1, 20 - 1, 0]);
 verifyCubeProperties(6, "RightHand", [4, 4, 4], [6 + 1.5 - 1, 14 - 1, 0]);
 verifyCubeProperties(7, "LeftArm", [3, 8, 3], [-6 - 1.5 + 1, 20 - 1, 0]);
 verifyCubeProperties(8, "LeftHand", [4, 4, 4], [-6 - 1.5 + 1, 14 - 1, 0]);
+
+console.assert(c(0).from[0] == c(1).to[0]);
+console.assert(c(0).to[1] == c(2).from[1]);
+console.assert(c(2).to[1] == c(3).from[1]);
+console.assert(c(2).to[1] + 1 == c(4).from[1]);
+
+console.assert(c(2).to[0] - 1 == c(5).from[0]);
+console.assert(c(2).to[1] - 1 == c(5).to[1]);
+
+console.assert(c(5).from[1] == c(6).to[1]);
+
+console.assert(c(2).from[0] + 1 == c(7).to[0]);
+console.assert(c(2).to[1] - 1 == c(7).to[1]);
+
+console.assert(c(7).from[1] == c(8).to[1]);
+
 
 
 Cube.all.forEach(cube => {
