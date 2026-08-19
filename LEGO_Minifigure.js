@@ -41,7 +41,6 @@ leftLeg.rotation[1] = 1.5
 rightArm.rotation[2] = 15
 leftArm.rotation[2] = -15
 
-Canvas.updateAll();
 
 function verifyGroup(index, name, origin, length) {
 	const g = Group.all[index];
@@ -169,14 +168,60 @@ console.assert(LeftLegGroup.origin[1] == LeftLeg.to[1]);
 console.assert(RightLegGroup.origin[1] == LeftLegGroup.origin[1]);
 
 
-const Model = new Group({ name: "Model" }).init();
-RightLegGroup.addTo(Model);
-LeftLegGroup.addTo(Model);
-BodyGroup.addTo(Model);
-HeadGroup.addTo(Model);
-RightArmGroup.addTo(Model);
-LeftArmGroup.addTo(Model);
+const ModelGroup = new Group({ name: "Model" }).init();
+RightLegGroup.addTo(ModelGroup);
+LeftLegGroup.addTo(ModelGroup);
+BodyGroup.addTo(ModelGroup);
+HeadGroup.addTo(ModelGroup);
+RightArmGroup.addTo(ModelGroup);
+LeftArmGroup.addTo(ModelGroup);
 
 Cube.all.forEach(cube => {
 	console.assert(cube.origin[2] == 0);
 });
+
+
+Animation.all.slice().forEach(anim => anim.remove());
+
+const anim = new Animation({
+	name: 'walk',
+	loop: 'loop',
+	length: 1.0
+}).add();
+
+const animData = [
+	{ group: RightLegGroup, channel: 'rotation', keys: [[0, 30], [0.5, -30], [1, 30]] },
+	{ group: LeftLegGroup, channel: 'rotation', keys: [[0, -30], [0.5, 30], [1, -30]] },
+	{ group: RightArmGroup, channel: 'rotation', keys: [[0, -30], [0.5, 30], [1, -30]] },
+	{ group: LeftArmGroup, channel: 'rotation', keys: [[0, 30], [0.5, -30], [1, 30]] },
+
+	{
+		group: ModelGroup,
+		channel: 'position',
+		keys: [
+			[0, -0.5],
+			[0.25, 0],
+			[0.5, -0.5],
+			[0.75, 0],
+			[1, -0.5]
+		]
+	}
+];
+
+animData.forEach(({ group, channel, keys }) => {
+	const animator = anim.getBoneAnimator(group);
+
+	keys.forEach(([time, value]) => {
+		const point = channel === 'position'
+			? { x: 0, y: value, z: 0 }
+			: { x: value, y: 0, z: 0 };
+
+		animator.addKeyframe({
+			channel: channel,
+			time: time,
+			data_points: [point]
+		});
+	});
+});
+
+Canvas.updateAll();
