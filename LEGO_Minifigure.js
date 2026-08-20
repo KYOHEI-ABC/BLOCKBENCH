@@ -224,4 +224,13 @@ animData.forEach(({ group, channel, keys }) => {
 	});
 });
 
+
+// NINJAGO
+Cube.all.find(cube => cube.name === 'Neck').visibility = false;
+
+const MaskCube = Cube.all.find(cube => cube.name === 'Head').duplicate();
+MaskCube.name = 'Mask';
+MaskCube.inflate = 1;
+
+
 Canvas.updateAll();
