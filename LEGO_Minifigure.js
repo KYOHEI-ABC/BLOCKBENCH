@@ -18,14 +18,16 @@ function newGroup(name, from, size) {
 }
 
 
-const rightLeg = newGroup("RightLeg", [0, 0, -3], [6, 12, 6]);
+const rightLeg = newGroup("RightLeg", [0.5, 0, -3], [5.5, 12, 6]);
 rightLeg.origin[1] = rightLeg.children[0].to[1]
-const leftLeg = newGroup("LeftLeg", [-6, 0, -3], [6, 12, 6]);
+const leftLeg = newGroup("LeftLeg", [-6, 0, -3], [5.5, 12, 6]);
 leftLeg.origin[1] = leftLeg.children[0].to[1]
 
-
-newGroup("Body", [-6, 12, -3], [12, 12, 6]);
-newCube("Neck", [-2, 24, -2], [4, 10, 4]).addTo(newGroup("Head", [-4, 25, -4], [8, 8, 8]));
+const body = newGroup("Body", [-6, 12, -3], [12, 12, 6]);
+newCube("Hip", [-0.5, 6, -3], [1, 6, 6]).addTo(body);
+const head = newGroup("Head", [-4, 25, -4], [8, 8, 8]);
+newCube("Neck", [-2, 24, -2], [4, 1, 4]).addTo(head);
+newCube("Stud", [-2, 33, -2], [4, 1, 4]).addTo(head);
 
 const rightArm = newGroup("RightArm", [6 - 1, 16 - 1, -1.5], [3, 8, 3]);
 rightArm.origin[1] = rightArm.children[0].to[1] - (rightArm.children[0].to[0] - rightArm.children[0].from[0]) / 2
@@ -35,8 +37,8 @@ const leftArm = newGroup("LeftArm", [-9 + 1, 16 - 1, -1.5], [3, 8, 3]);
 leftArm.origin[1] = leftArm.children[0].to[1] - (leftArm.children[0].to[0] - leftArm.children[0].from[0]) / 2
 newGroup("LeftHand", [leftArm.origin[0] - 2, leftArm.children[0].from[1] - 4, -2], [4, 4, 4]).addTo(leftArm);
 
-rightLeg.rotation[1] = -1.5
-leftLeg.rotation[1] = 1.5
+// rightLeg.rotation[1] = -1.5
+// leftLeg.rotation[1] = 1.5
 
 rightArm.rotation[2] = 15
 leftArm.rotation[2] = -15
@@ -53,11 +55,14 @@ function verifyGroup(index, name, origin, length) {
 	return true;
 };
 
-verifyGroup(0, "RightLeg", [3, 12, 0], 1);
-verifyGroup(1, "LeftLeg", [-3, 12, 0], 1);
-verifyGroup(2, "Body", [0, 18, 0], 1);
-verifyGroup(3, "Head", [0, 29, 0], 2);
+verifyGroup(0, "RightLeg", [(0.5 + 6) / 2, 12, 0], 1);
+verifyGroup(1, "LeftLeg", [(-6 - 0.5) / 2, 12, 0], 1);
+verifyGroup(2, "Body", [0, 18, 0], 2);
+console.assert(Group.all[2].children[1].name == "Hip");
+
+verifyGroup(3, "Head", [0, 29, 0], 3);
 console.assert(Group.all[3].children[1].name == "Neck");
+console.assert(Group.all[3].children[2].name == "Stud");
 
 verifyGroup(4, "RightArm", [6 + 1.5 - 1, 24 - 1.5 - 1, 0], 2);
 console.assert(Group.all[4].children[1].name == "RightHand");
@@ -79,35 +84,41 @@ function size(cube) {
 
 function verifyCube(index, name, expectedSize, origin) {
 	const c = Cube.all[index];
-	if (!c) return false;
-	if (c.name !== name) return false;
-	if (JSON.stringify(size(c)) !== JSON.stringify(expectedSize)) return false;
-	if (JSON.stringify(c.origin) !== JSON.stringify(origin)) return false;
+	if (!c) return console.assert(), false;
+	if (c.name !== name) return console.assert(), false;
+	if (JSON.stringify(size(c)) !== JSON.stringify(expectedSize)) return console.assert(), false;
+	if (JSON.stringify(c.origin) !== JSON.stringify(origin)) return console.assert(), false;
 	if (c.parent.name !== name) console.log(c.parent.name, name);
 
 	return true;
 }
 
-verifyCube(0, "RightLeg", [6, 12, 6], [3, 6, 0]);
-verifyCube(1, "LeftLeg", [6, 12, 6], [-3, 6, 0]);
+
+verifyCube(0, "RightLeg", [5.5, 12, 6], [(0.5 + 6) / 2, 6, 0]);
+verifyCube(1, "LeftLeg", [5.5, 12, 6], [(-6 - 0.5) / 2, 6, 0]);
 verifyCube(2, "Body", [12, 12, 6], [0, 18, 0]);
-verifyCube(3, "Neck", [4, 10, 4], [0, 29, 0]);
+verifyCube(3, "Hip", [1, 6, 6], [0, 9, 0]);
 verifyCube(4, "Head", [8, 8, 8], [0, 29, 0]);
-verifyCube(5, "RightArm", [3, 8, 3], [6 + 1.5 - 1, 20 - 1, 0]);
-verifyCube(6, "RightHand", [4, 4, 4], [6 + 1.5 - 1, 14 - 1, 0]);
-verifyCube(7, "LeftArm", [3, 8, 3], [-6 - 1.5 + 1, 20 - 1, 0]);
-verifyCube(8, "LeftHand", [4, 4, 4], [-6 - 1.5 + 1, 14 - 1, 0]);
+verifyCube(5, "Neck", [4, 1, 4], [0, 24.5, 0]);
+verifyCube(6, "Stud", [4, 1, 4], [0, 33.5, 0]);
+
+verifyCube(7, "RightArm", [3, 8, 3], [6 + 1.5 - 1, 20 - 1, 0]);
+verifyCube(8, "RightHand", [4, 4, 4], [6 + 1.5 - 1, 14 - 1, 0]);
+verifyCube(9, "LeftArm", [3, 8, 3], [-6 - 1.5 + 1, 20 - 1, 0]);
+verifyCube(10, "LeftHand", [4, 4, 4], [-6 - 1.5 + 1, 14 - 1, 0]);
 
 
 const RightLeg = Cube.all[0];
 const LeftLeg = Cube.all[1];
 const Body = Cube.all[2];
-const Neck = Cube.all[3];
+const Hip = Cube.all[3];
 const Head = Cube.all[4];
-const RightArm = Cube.all[5];
-const RightHand = Cube.all[6];
-const LeftArm = Cube.all[7];
-const LeftHand = Cube.all[8];
+const Neck = Cube.all[5];
+const Stud = Cube.all[6];
+const RightArm = Cube.all[7];
+const RightHand = Cube.all[8];
+const LeftArm = Cube.all[9];
+const LeftHand = Cube.all[10];
 
 const RightLegGroup = Group.all[0];
 const LeftLegGroup = Group.all[1];
@@ -119,7 +130,8 @@ const LeftArmGroup = Group.all[6];
 const LeftHandGroup = Group.all[7];
 
 
-console.assert(LeftLeg.to[0] == RightLeg.from[0]);
+console.assert(RightLeg.from[0] == Hip.to[0]);
+console.assert(LeftLeg.to[0] == Hip.from[0]);
 console.assert(RightLeg.to[1] == Body.from[1]);
 console.assert(LeftLeg.to[1] == Body.from[1]);
 console.assert(Body.to[1] == Neck.from[1]);
@@ -157,12 +169,12 @@ console.assert(RightArmGroup.origin[1] == LeftArmGroup.origin[1]);
 console.assert(RightArmGroup.origin[0] == RightHandGroup.origin[0]);
 console.assert(LeftArmGroup.origin[0] == LeftHandGroup.origin[0]);
 
-console.assert(RightLegGroup.origin[0] + 3 == RightLeg.to[0]);
-console.assert(RightLegGroup.origin[0] - 3 == RightLeg.from[0]);
+console.assert(RightLegGroup.origin[0] + 5.5 / 2 == RightLeg.to[0]);
+console.assert(RightLegGroup.origin[0] - 5.5 / 2 == RightLeg.from[0]);
 console.assert(RightLegGroup.origin[1] == RightLeg.to[1]);
 
-console.assert(LeftLegGroup.origin[0] + 3 == LeftLeg.to[0]);
-console.assert(LeftLegGroup.origin[0] - 3 == LeftLeg.from[0]);
+console.assert(LeftLegGroup.origin[0] + 5.5 / 2 == LeftLeg.to[0]);
+console.assert(LeftLegGroup.origin[0] - 5.5 / 2 == LeftLeg.from[0]);
 console.assert(LeftLegGroup.origin[1] == LeftLeg.to[1]);
 
 console.assert(RightLegGroup.origin[1] == LeftLegGroup.origin[1]);
@@ -177,6 +189,7 @@ RightArmGroup.addTo(ModelGroup);
 LeftArmGroup.addTo(ModelGroup);
 
 Cube.all.forEach(cube => {
+	console.log(cube.name);
 	console.assert(cube.origin[2] == 0);
 });
 
@@ -227,10 +240,10 @@ animData.forEach(({ group, channel, keys }) => {
 
 // NINJAGO
 Cube.all.find(cube => cube.name === 'Neck').visibility = false;
+Cube.all.find(cube => cube.name === 'Stud').visibility = false;
 
-const MaskCube = Cube.all.find(cube => cube.name === 'Head').duplicate();
-MaskCube.name = 'Mask';
-MaskCube.inflate = 1;
+newCube("Mask", [-5, 24, -5], [10, 10, 10]).addTo(head);
+
 
 
 Canvas.updateAll();
