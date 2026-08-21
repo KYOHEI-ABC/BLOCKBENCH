@@ -135,7 +135,13 @@ console.assert(LeftLeg.to[0] == Hip.from[0]);
 console.assert(RightLeg.to[1] == Body.from[1]);
 console.assert(LeftLeg.to[1] == Body.from[1]);
 console.assert(Body.to[1] == Neck.from[1]);
-console.assert(Body.to[1] + 1 == Head.from[1]);
+console.assert(Neck.to[1] == Head.from[1]);
+console.assert(Head.to[1] == Stud.from[1]);
+console.assert(Stud.to[1] == 12 + 12 + 1 + 8 + 1);
+
+console.assert(Hip.to[1] == Body.from[1]);
+console.assert(Hip.from[1] == RightLeg.to[1] / 2);
+console.assert(Hip.from[1] == LeftLeg.to[1] / 2);
 
 console.assert(Body.to[0] - 1 == RightArm.from[0]);
 console.assert(Body.to[1] - 1 == RightArm.to[1]);
