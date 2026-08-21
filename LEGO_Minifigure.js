@@ -239,10 +239,16 @@ animData.forEach(({ group, channel, keys }) => {
 
 
 // NINJAGO
-Cube.all.find(cube => cube.name === 'Neck').visibility = false;
+// Cube.all.find(cube => cube.name === 'Neck').visibility = false;
 Cube.all.find(cube => cube.name === 'Stud').visibility = false;
 
-newCube("Mask", [-5, 24, -5], [10, 10, 10]).addTo(head);
+// newCube("Mask", [-5, 24, -5], [10, 10, 10]).addTo(head);
+
+const mask = newCube("Mask", [-4.5, 24.5, -4.5], [9, 9, 9]).addTo(head);
+mask.inflate = 0.5;
+Cube.all.find(cube => cube.name === 'Head').inflate = 0.5;
+Cube.all.find(cube => cube.name === 'Head').from = [-3.5, 25.5, -3.5]
+Cube.all.find(cube => cube.name === 'Head').to = [3.5, 32.5, 3.5]
 
 
 
